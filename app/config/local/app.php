@@ -2,12 +2,6 @@
 
 return array(
 
-    /*
-     * Mailtrap API access token.
-     *
-     */
-    'mailtrap_api' => 'fa17f38ebd683099e3b279d44d949fc8',
-
 	/*
 	|--------------------------------------------------------------------------
 	| Application Debug Mode

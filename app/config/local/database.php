@@ -25,7 +25,7 @@ return array(
 			'host'      => 'localhost',
 			'database'  => 'mailer',
 			'username'  => 'root',
-			'password'  => '',
+			'password'  => 'kompas',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

@@ -30,33 +30,30 @@ class MailtrapController extends BaseController
      * Getting emails in object format.
      *
      * @param bool $inbox_id ID of the inbox. If no ID set, getting the first inbox ID.
-     * @return mixed
-     * @throws Exception
+     * @return string|bool JSON object of emails on success, false on failure
      */
     public function getEmails($inbox_id = false)
     {
         if (!$inbox_id)
         {
-            try
+            $inbox_id = $this->getInboxID();
+
+            // Unable to get inboxID, returning false
+            if (!$inbox_id)
             {
-                $inbox_id = $this->getInboxID();
-            }
-            catch (Exception $e)
-            {
-                throw $e;
+                return false;
             }
         }
 
-        try
+        $response = $this->send_request('get', "/api/v1/inboxes/$inbox_id/messages");
+        if ($response)
         {
-            $response = $this->send_request('get', "/api/v1/inboxes/$inbox_id/messages");
+            return json_decode($response);
         }
-        catch (Exception $e)
+        else
         {
-            throw $e;
+            return false;
         }
-
-        return json_decode($response);
     }
 
 
@@ -64,55 +61,42 @@ class MailtrapController extends BaseController
      * Cleaning the inbox.
      *
      * @param string $inbox_id ID of the inbox. If no ID set, getting the first inbox ID.
-     * @return bool
-     * @throws Exception
+     * @return string|bool JSON data on success, false on failure
      */
     public function cleanInbox($inbox_id = false)
     {
         if (!$inbox_id)
         {
-            try
+            $inbox_id = $this->getInboxID();
+
+            // Unable to get inboxID, returning false
+            if (!$inbox_id)
             {
-                $inbox_id = $this->getInboxID();
-            }
-            catch (Exception $e)
-            {
-                throw $e;
+                return false;
             }
         }
 
-        try
-        {
-            $this->send_request('patch', "/api/v1/inboxes/$inbox_id/clean");
-        }
-        catch (Exception $e)
-        {
-            throw $e;
-        }
-
-        return true;
+        return $this->send_request('patch', "/api/v1/inboxes/$inbox_id/clean");
     }
 
 
     /**
      * Free version of mailtrap has only one inbox, getting the inbox ID.
      *
-     * @return string Inbox ID
-     * @throws Exception
+     * @return string|bool Inbox ID or false on failure
      */
     public function getInboxID()
     {
-        try
+        $response = $this->send_request('get', '/api/v1/inboxes');
+        if ($response)
         {
-            $response = $this->send_request('get', '/api/v1/inboxes');
+            $result = json_decode($response);
+            return $result[0]->id;
         }
-        catch (Exception $e)
+        else
         {
-            throw $e;
+            return false;
         }
-
-        $result = json_decode($response);
-        return $result[0]->id;
     }
 
 
@@ -121,8 +105,7 @@ class MailtrapController extends BaseController
      *
      * @param $type Request type
      * @param $path Request path
-     * @return string JSON encoded string
-     * @throws Exception
+     * @return string|bool JSON encoded string or false on failure
      */
     private function send_request($type, $path)
     {
@@ -132,7 +115,7 @@ class MailtrapController extends BaseController
         }
         catch (Exception $e)
         {
-            throw $e;
+            return false;
         }
 
         return (string)$response->getBody();

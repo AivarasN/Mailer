@@ -31,18 +31,17 @@ class BackendController extends BaseController
      */
     public function mailQueue()
     {
-        $mailtrap = new MailtrapController(Config::get('app.mailtrap_api'));
+        $mailtrap = new MailtrapController(Config::get('services.mailtrap.api_key'));
 
-        try
+        $mails = $mailtrap->getEmails();
+        if ($mails !== false)
         {
-            $mails = $mailtrap->getEmails();
+            return View::make('admin_mail_queue')->with('mails', $mails);
         }
-        catch (Exception $e)
+        else
         {
-            return View::make('admin_mail_queue')->with('warning', 'Error! ' . $e->getMessage());
+            return View::make('admin_mail_queue')->with('warning', 'Error!');
         }
-
-        return View::make('admin_mail_queue')->with('mails', $mails);
     }
 
     /**
@@ -50,18 +49,17 @@ class BackendController extends BaseController
      */
     public function cleanInbox()
     {
-        $mailtrap = new MailtrapController(Config::get('app.mailtrap_api'));
+        $mailtrap = new MailtrapController(Config::get('services.mailtrap.api_key'));
 
-        try
+        $result = $mailtrap->cleanInbox();
+        if ($result !== false)
         {
-            $mailtrap->cleanInbox();
+            return Redirect::route('backendMailQueue')->with('success', 'Inbox cleaned.');
         }
-        catch (Exception $e)
+        else
         {
-            return Redirect::to('/admin/mail_queue')->with('warning', 'Error! ' . $e->getMessage());
+            return Redirect::route('backendMailQueue')->with('warning', 'Error!');
         }
-
-        return Redirect::to('/admin/mail_queue')->with('success', 'Inbox cleaned.');
     }
 
 
@@ -71,21 +69,8 @@ class BackendController extends BaseController
     public function sendEmail()
     {
 
-        $rules = array(
-            'from'      => 'required|email',
-            'subject'   => 'required',
-            'text'      => 'required',
-        );
-
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails())
-        {
-
-            return Redirect::to('/admin/new_email')->withErrors($validator);
-
-        }
-        else
+        $mass_email = new MassEmail();
+        if ($mass_email->validate(Input::all()))
         {
             $addresses = Address::all();
 
@@ -105,7 +90,11 @@ class BackendController extends BaseController
                 });
             }
 
-            return Redirect::to('/admin/new_email')->with('success', 'Email queued for sending.');
+            return Redirect::route('backendNewEmail')->with('success', 'Email queued for sending.');
+        }
+        else
+        {
+            return Redirect::route('backendNewEmail')->withErrors($mass_email->errors());
         }
 
     }

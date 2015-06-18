@@ -8,7 +8,6 @@
             @include('admin_navigation')
 
             <div class="col-sm-8 table-responsive">
-                {{ Form::open(array('url' => '/admin/saveEmail')) }}
                 @if ($errors->has())
                     <div class="alert alert-danger">
                         @foreach ($errors->all() as $error)
@@ -51,7 +50,7 @@
                 @if (isset($mails))
                     @if (count($mails) > 0)
                         <div class="row text-right">
-                            <a href="{{URL::to('/admin/clean_inbox')}}" class="btn btn-info" role="button">Clean inbox</a>
+                            <a href="{{URL::route('backendCleanInbox')}}" class="btn btn-info" role="button">Clean inbox</a>
                         </div>
                     @endif
                 @endif

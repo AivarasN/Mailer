@@ -8,7 +8,7 @@
             @include('admin_navigation')
 
             <div class="col-sm-8 table-responsive">
-                {{ Form::open(array('url' => '/admin/sendEmail')) }}
+                {{ Form::open(array('route' => 'backendSendEmail')) }}
                     @if ($errors->has())
                         <div class="alert alert-danger">
                             @foreach ($errors->all() as $error)

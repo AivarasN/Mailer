@@ -19,27 +19,17 @@ class FrontendController extends BaseController
     public function registerAddress()
     {
 
-        $rules = array(
-            'email' => 'required|email|unique:addresses',
-        );
-
-        $validator = Validator::make(Input::all(), $rules);
-
-        if ($validator->fails())
+        $address = new Address();
+        if ($address->validate(Input::all()))
         {
+            $address->email = Input::get('email');
+            $address->save();
 
-            return Redirect::to('/')->withErrors($validator);
-
+            return Redirect::route('frontendIndex')->with('success', 'Email registered.');
         }
         else
         {
-
-            $new_ad = new Address;
-            $new_ad->email = Input::get('email');;
-            $new_ad->save();
-
-            return Redirect::to('/')->with('success', 'Email registered.');
-
+            return Redirect::route('frontendIndex')->withErrors($address->errors());
         }
 
     }

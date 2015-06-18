@@ -1,11 +1,13 @@
 <?php
 
-class Address extends Eloquent
+class MassEmail extends Eloquent
 {
     public $timestamps = false;
-    protected $fillable = array('email');
+    protected $fillable = array('from', 'subject', 'text');
     private $rules = array(
-        'email' => 'required|email|unique:addresses',
+        'from'      => 'required|email',
+        'subject'   => 'required',
+        'text'      => 'required',
     );
     private $errors;
 

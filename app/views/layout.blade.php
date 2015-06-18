@@ -16,8 +16,8 @@
             <div class="container">
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{URL::to('/')}}">Frontend</a></li>
-                        <li><a href="{{URL::to('/admin')}}">Admin</a></li>
+                        <li><a href="{{ URL::route('frontendIndex') }}">Frontend</a></li>
+                        <li><a href="{{ URL::route('backendIndex')}}">Admin</a></li>
                     </ul>
                 </div>
             </div>

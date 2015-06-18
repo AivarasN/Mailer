@@ -6,7 +6,7 @@
         <div class="row text-center">
             <div class="col-sm-8 col-sm-offset-2">
 
-            {{ Form::open(array('url' => '/registerAddress')) }}
+            {{ Form::open(array('route' => 'frontendRegisterAddress')) }}
                 <div class="form-group">
                     @if ($errors->has())
                         <div class="alert alert-danger">

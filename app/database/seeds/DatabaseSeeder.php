@@ -11,7 +11,19 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		// $this->call('UserTableSeeder');
+		$this->call('AddressTableSeeder');
 	}
+
+}
+
+class AddressTableSeeder extends Seeder
+{
+
+    public function run()
+    {
+        DB::table('addresses')->delete();
+        Address::create(array('email' => 'pirmaspastas@domenas.lt'));
+        Address::create(array('email' => 'antraspastas@domenas.lt'));
+    }
 
 }

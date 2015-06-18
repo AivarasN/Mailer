@@ -11,11 +11,44 @@
 |
 */
 
-Route::get('/', 'FrontendController@index');
-Route::get('/admin', 'BackendController@index');
-Route::get('/admin/new_email', 'BackendController@newEmail');
-Route::get('/admin/mail_queue', 'BackendController@mailQueue');
-Route::get('/admin/clean_inbox', 'BackendController@cleanInbox');
+Route::get('/', array(
+                    'as' => 'frontendIndex',
+                    'uses' => 'FrontendController@index'
+));
 
-Route::post('/registerAddress', 'FrontendController@registerAddress');
-Route::post('/admin/sendEmail', 'BackendController@sendEmail');
+Route::post('/registerAddress', array(
+                    'as' => 'frontendRegisterAddress',
+                    'uses' => 'FrontendController@registerAddress'
+));
+
+
+Route::group(array('prefix' => 'admin'), function()
+{
+
+    Route::get('/', array(
+                        'as' => 'backendIndex',
+                        'uses' => 'BackendController@index'
+    ));
+
+    Route::get('/new_email', array(
+                        'as' => 'backendNewEmail',
+                        'uses' => 'BackendController@newEmail'
+    ));
+
+    Route::get('/mail_queue', array(
+                        'as' => 'backendMailQueue',
+                        'uses' => 'BackendController@mailQueue'
+    ));
+
+    Route::get('/clean_inbox', array(
+                        'as' => 'backendCleanInbox',
+                        'uses' => 'BackendController@cleanInbox'
+    ));
+
+    Route::post('/admin/sendEmail', array(
+                        'as' => 'backendSendEmail',
+                        'uses' => 'BackendController@sendEmail'
+    ));
+
+});
+

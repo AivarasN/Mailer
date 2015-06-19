@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Routing\Controller as BaseController;
-use MailtrapController;
 
 class BackendController extends BaseController
 {
@@ -31,9 +30,7 @@ class BackendController extends BaseController
      */
     public function mailQueue()
     {
-        $mailtrap = new MailtrapController(Config::get('services.mailtrap.api_key'));
-
-        $mails = $mailtrap->getEmails();
+        $mails = Mailtrap::getEmails();
         if ($mails !== false)
         {
             return View::make('admin_mail_queue')->with('mails', $mails);
@@ -49,9 +46,7 @@ class BackendController extends BaseController
      */
     public function cleanInbox()
     {
-        $mailtrap = new MailtrapController(Config::get('services.mailtrap.api_key'));
-
-        $result = $mailtrap->cleanInbox();
+        $result = Mailtrap::cleanInbox();
         if ($result !== false)
         {
             return Redirect::route('backendMailQueue')->with('success', 'Inbox cleaned.');

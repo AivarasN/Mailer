@@ -1,9 +1,8 @@
-<?php
+<?php namespace Services\Mailtrap;
 
-use Illuminate\Routing\Controller as BaseController;
 use GuzzleHttp\Client as GuzzleHttp;
 
-class MailtrapController extends BaseController
+class Mailtrap
 {
 
     private $api_token;
